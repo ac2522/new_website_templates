@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Matrix Terminal</title>
+    <style>
+        body {
+            background-color: black;
+            color: lime;
+            font-family: 'Courier New', Courier, monospace;
+            font-size : 1.5em;
+            cursor: none;
+            pointer-events:fill;
+            caret-color: transparent;
+        }
+        #terminal {
+            white-space: pre-wrap;
+            width: 90%;
+            height: 90vh;
+            margin: auto;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal" contenteditable="true" spellcheck="false"></div>
+
+    <script>
+        var terminal = document.getElementById('terminal');
+        var text = ["Wake up, Neo", "Follow the white rabbit."];
+        var inputMode = false;
+        var deleted;
+
+        function printText(index, charIndex) {
+            if (charIndex < text[index].length) {
+                terminal.textContent += text[index][charIndex];
+                setTimeout(printText, 100, index, charIndex + 1);
+            } else {
+                inputMode = true;
+                deleted = false;
+            }
+        }
+
+        terminal.addEventListener('keydown', function(event) {
+            if (inputMode) {
+                if (!deleted) {
+                    terminal.textContent = '';
+                    deleted = true;
+                } else if (event.key === "Enter") {
+                    event.preventDefault();
+                    text = [terminal.textContent];
+                    terminal.textContent = '';
+                    inputMode = false;
+                    printText(1, 0);
+                }
+            } else {
+                event.preventDefault();
+            }
+        });
+
+        printText(0, 0);
+    </script>
+</body>
+</html>
